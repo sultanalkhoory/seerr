@@ -2,34 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ===== GLASSMORPHISM DESIGN SYSTEM =====
+   Apple TV-inspired premium design
+   - Pure black backgrounds (#000000)
+   - Apple Blue accent (#0A84FF)
+   - Frosted glass effects
+   - Inter typography
+   ========================================= */
+
 @layer base {
+  /* Root variables for easy theming */
+  :root {
+    --glass-blur: 20px;
+    --glass-blur-sm: 12px;
+    --glass-blur-lg: 40px;
+    --glass-blur-xl: 64px;
+    --apple-blue: #0A84FF;
+    --glass-black: #000000;
+    --transition-fast: 150ms;
+    --transition-base: 250ms;
+    --transition-slow: 400ms;
+  }
+
   html {
     min-height: calc(100% + env(safe-area-inset-top));
     padding: env(safe-area-inset-top) env(safe-area-inset-right)
       calc(4rem + env(safe-area-inset-bottom)) env(safe-area-inset-left);
     scrollbar-width: thin;
-    scrollbar-color: #4b5563 #1f2937;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   html:hover {
-    scrollbar-color: #6b7280 #1f2937;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
   }
 
-  /* WebKit scrollbar styles */
+  /* Premium scrollbar styling */
   html::-webkit-scrollbar {
-    width: 10px;
+    width: 8px;
   }
 
   html::-webkit-scrollbar-track {
-    background: #1f2937;
+    background: transparent;
   }
 
   html::-webkit-scrollbar-thumb {
-    background-color: #4b5563;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
   }
 
   html:hover::-webkit-scrollbar-thumb {
-    background-color: #6b7280;
+    background-color: rgba(255, 255, 255, 0.3);
   }
 
   @media (min-width: 640px) {
@@ -39,83 +63,327 @@
   }
 
   body {
-    @apply bg-gray-900;
+    @apply bg-glass-black text-text-primary;
     -webkit-overflow-scrolling: touch;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-apple-blue/30 text-white;
+  }
+
+  /* Focus outline styling */
+  :focus-visible {
+    @apply outline-none ring-2 ring-apple-blue ring-offset-2 ring-offset-glass-black;
   }
 
   code {
-    @apply rounded-md bg-gray-800 px-2 py-1;
+    @apply rounded-glass-sm bg-glass-300 px-2 py-1 font-mono text-sm;
   }
 
   input[type='search']::-webkit-search-cancel-button {
     -webkit-appearance: none;
   }
+
+  /* Premium typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight text-text-primary;
+  }
+
+  h1 { @apply text-display-lg; }
+  h2 { @apply text-display-md; }
+  h3 { @apply text-display-sm; }
+  h4 { @apply text-display-xs; }
 }
 
 @layer components {
-  .searchbar {
-    padding-top: env(safe-area-inset-top);
-    height: calc(4rem + env(safe-area-inset-top));
+  /* ===== GLASS CARD COMPONENTS ===== */
+
+  .glass-card {
+    @apply relative rounded-glass border border-glass-border bg-glass-200 backdrop-blur-glass;
+    @apply shadow-glass transition-all duration-250 ease-glass;
   }
 
-  .sidebar {
-    @apply border-r border-gray-700;
+  .glass-card-hover {
+    @apply glass-card;
+    @apply hover:bg-glass-300 hover:border-glass-border-light hover:shadow-glass-lg;
+    @apply hover:scale-[1.02] active:scale-[0.98];
+  }
+
+  .glass-card-interactive {
+    @apply glass-card-hover cursor-pointer;
+    @apply focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2 focus-visible:ring-offset-glass-black;
+  }
+
+  .glass-card-subtle {
+    @apply rounded-glass-sm border border-glass-border/50 bg-glass-100 backdrop-blur-glass-sm;
+  }
+
+  .glass-card-prominent {
+    @apply rounded-glass-lg border border-glass-border-medium bg-glass-300 backdrop-blur-glass-lg shadow-glass-lg;
+  }
+
+  /* ===== GLASS BUTTON COMPONENTS ===== */
+
+  .glass-button {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply rounded-glass-sm px-4 py-2.5 text-sm font-semibold;
+    @apply border border-glass-border bg-glass-300 backdrop-blur-glass-sm;
+    @apply text-text-primary transition-all duration-200 ease-glass;
+    @apply hover:bg-glass-400 hover:border-glass-border-light;
+    @apply active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply focus-visible:ring-2 focus-visible:ring-apple-blue focus-visible:ring-offset-2 focus-visible:ring-offset-glass-black;
+  }
+
+  .glass-button-primary {
+    @apply glass-button;
+    @apply bg-apple-blue border-apple-blue/50 text-white;
+    @apply hover:bg-apple-blue-400 hover:border-apple-blue/70;
+    @apply shadow-glass-glow;
+  }
+
+  .glass-button-success {
+    @apply glass-button;
+    @apply bg-status-success/80 border-status-success/50 text-white;
+    @apply hover:bg-status-success hover:border-status-success/70;
+  }
+
+  .glass-button-danger {
+    @apply glass-button;
+    @apply bg-status-error/80 border-status-error/50 text-white;
+    @apply hover:bg-status-error hover:border-status-error/70;
+  }
+
+  .glass-button-warning {
+    @apply glass-button;
+    @apply bg-status-warning/80 border-status-warning/50 text-glass-black;
+    @apply hover:bg-status-warning hover:border-status-warning/70;
+  }
+
+  .glass-button-ghost {
+    @apply glass-button;
+    @apply bg-transparent border-transparent;
+    @apply hover:bg-glass-200 hover:border-glass-border;
+  }
+
+  .glass-button-sm {
+    @apply px-3 py-1.5 text-xs rounded-glass-sm;
+  }
+
+  .glass-button-lg {
+    @apply px-6 py-3 text-base rounded-glass;
+  }
+
+  .glass-button-icon {
+    @apply p-2.5 rounded-glass-sm;
+  }
+
+  /* ===== GLASS INPUT COMPONENTS ===== */
+
+  .glass-input {
+    @apply w-full rounded-glass-sm px-4 py-2.5;
+    @apply border border-glass-border bg-glass-200 backdrop-blur-glass-sm;
+    @apply text-text-primary placeholder:text-text-muted;
+    @apply transition-all duration-200 ease-glass;
+    @apply hover:border-glass-border-light hover:bg-glass-300;
+    @apply focus:border-apple-blue focus:bg-glass-300 focus:ring-2 focus:ring-apple-blue/20 focus:outline-none;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .glass-input-error {
+    @apply glass-input;
+    @apply border-status-error focus:border-status-error focus:ring-status-error/20;
+  }
+
+  .glass-select {
+    @apply glass-input appearance-none cursor-pointer;
+    @apply bg-[url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff50' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")];
+    @apply bg-[length:1.5em_1.5em] bg-[right_0.5rem_center] bg-no-repeat pr-10;
+  }
+
+  .glass-textarea {
+    @apply glass-input resize-none min-h-[100px];
+  }
+
+  .glass-checkbox {
+    @apply h-5 w-5 rounded-md border-glass-border bg-glass-200;
+    @apply text-apple-blue focus:ring-apple-blue focus:ring-offset-glass-black;
+    @apply transition-colors duration-200;
+  }
+
+  /* ===== GLASS BADGE COMPONENTS ===== */
+
+  .glass-badge {
+    @apply inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold;
+    @apply rounded-glass-full border border-glass-border bg-glass-300 backdrop-blur-glass-sm;
+    @apply text-text-primary;
+  }
+
+  .glass-badge-primary {
+    @apply glass-badge border-apple-blue/50 bg-apple-blue/20 text-apple-blue;
+  }
+
+  .glass-badge-success {
+    @apply glass-badge border-status-success/50 bg-status-success/20 text-status-success;
+  }
+
+  .glass-badge-warning {
+    @apply glass-badge border-status-warning/50 bg-status-warning/20 text-status-warning;
+  }
+
+  .glass-badge-error {
+    @apply glass-badge border-status-error/50 bg-status-error/20 text-status-error;
+  }
+
+  .glass-badge-info {
+    @apply glass-badge border-status-info/50 bg-status-info/20 text-status-info;
+  }
+
+  /* ===== GLASS MODAL/OVERLAY ===== */
+
+  .glass-overlay {
+    @apply fixed inset-0 bg-glass-black/80 backdrop-blur-glass-sm;
+    @apply transition-opacity duration-300;
+  }
+
+  .glass-modal {
+    @apply glass-card-prominent p-6;
+    @apply max-w-lg w-full mx-4;
+    @apply animate-fade-in-scale;
+  }
+
+  .glass-modal-lg {
+    @apply glass-modal max-w-3xl;
+  }
+
+  /* ===== GLASS NAVIGATION ===== */
+
+  .glass-nav {
+    @apply fixed top-0 left-0 right-0 z-50;
+    @apply border-b border-glass-border bg-glass-black/80 backdrop-blur-glass-lg;
+    @apply transition-all duration-300;
+  }
+
+  .glass-nav-scrolled {
+    @apply bg-glass-200/80 shadow-glass-sm;
+  }
+
+  .glass-sidebar {
+    @apply fixed left-0 top-0 bottom-0 w-64;
+    @apply border-r border-glass-border bg-glass-100/80 backdrop-blur-glass-lg;
     padding-top: env(safe-area-inset-top);
     padding-left: env(safe-area-inset-left);
-    background: linear-gradient(180deg, rgba(31, 41, 55, 1) 0%, #131928 100%);
   }
 
-  .slideover {
-    padding-top: calc(0.75rem + env(safe-area-inset-top)) !important;
-    padding-bottom: calc(0.75rem + env(safe-area-inset-top)) !important;
+  /* ===== GLASS TABS ===== */
+
+  .glass-tabs {
+    @apply flex gap-1 p-1 rounded-glass border border-glass-border bg-glass-100;
   }
 
-  .sidebar-close-button {
-    top: env(safe-area-inset-top);
+  .glass-tab {
+    @apply px-4 py-2 text-sm font-medium rounded-glass-sm;
+    @apply text-text-secondary transition-all duration-200;
+    @apply hover:text-text-primary hover:bg-glass-200;
   }
 
-  .server-type-button {
-    @apply rounded-md border border-gray-500 bg-gray-700 px-4  py-2 text-white transition duration-150 ease-in-out hover:bg-gray-500;
-  }
-  .jellyfin-server svg {
-    @apply h-6 w-6;
-  }
-  .emby-server svg {
-    @apply h-7 w-7;
+  .glass-tab-active {
+    @apply glass-tab bg-glass-300 text-text-primary shadow-glass-sm;
   }
 
-  ul.cards-vertical,
-  ul.cards-horizontal {
-    @apply grid gap-4;
+  /* ===== GLASS DROPDOWN ===== */
+
+  .glass-dropdown {
+    @apply absolute z-50 min-w-[200px];
+    @apply rounded-glass border border-glass-border bg-glass-300/95 backdrop-blur-glass-lg;
+    @apply shadow-glass-lg p-1;
+    @apply animate-fade-in-down;
   }
 
-  ul.cards-vertical {
-    grid-template-columns: repeat(auto-fill, minmax(9.375rem, 1fr));
+  .glass-dropdown-item {
+    @apply flex items-center gap-3 px-3 py-2 text-sm;
+    @apply rounded-glass-sm text-text-secondary;
+    @apply transition-colors duration-150;
+    @apply hover:bg-glass-400 hover:text-text-primary;
+    @apply cursor-pointer;
   }
 
-  ul.cards-horizontal {
-    grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+  .glass-dropdown-item-active {
+    @apply glass-dropdown-item bg-apple-blue/20 text-apple-blue;
   }
 
-  .provider-icons {
-    grid-template-columns: repeat(auto-fill, minmax(3.5rem, 1fr));
+  /* ===== GLASS TOOLTIP ===== */
+
+  .glass-tooltip {
+    @apply absolute z-50 px-3 py-2 text-xs font-medium;
+    @apply rounded-glass-sm border border-glass-border bg-glass-400/95 backdrop-blur-glass-sm;
+    @apply text-text-primary shadow-glass-sm;
+    @apply animate-fade-in;
   }
 
-  .slider-header {
-    @apply relative mt-6 mb-4 flex;
+  /* ===== MEDIA COMPONENTS ===== */
+
+  .glass-poster {
+    @apply relative overflow-hidden rounded-glass;
+    @apply border border-glass-border bg-glass-200;
+    @apply shadow-glass transition-all duration-300 ease-glass;
+    @apply hover:shadow-glass-lg hover:border-glass-border-light;
+    @apply hover:scale-[1.03];
+    aspect-ratio: 2/3;
   }
 
-  .slider-title {
-    @apply inline-flex items-center text-xl font-bold leading-7 text-gray-300 sm:truncate sm:text-2xl sm:leading-9;
+  .glass-poster-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-glass-black via-transparent to-transparent;
+    @apply opacity-0 transition-opacity duration-300;
+    @apply group-hover:opacity-100;
   }
 
-  a.slider-title {
-    @apply transition duration-300 hover:text-white;
+  .glass-backdrop {
+    @apply relative w-full overflow-hidden;
+    aspect-ratio: 16/9;
   }
 
-  a.slider-title svg {
-    @apply ml-2 h-6 w-6;
+  .glass-backdrop-gradient {
+    @apply absolute inset-0;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 1) 100%
+    );
   }
+
+  /* ===== SLIDER COMPONENTS ===== */
+
+  .glass-slider-header {
+    @apply relative mt-8 mb-4 flex items-center justify-between;
+  }
+
+  .glass-slider-title {
+    @apply text-display-xs text-text-primary;
+    @apply flex items-center gap-2;
+  }
+
+  .glass-slider-title a {
+    @apply transition-colors duration-200 hover:text-apple-blue;
+  }
+
+  /* ===== SEARCH BAR ===== */
+
+  .glass-searchbar {
+    padding-top: env(safe-area-inset-top);
+    height: calc(4rem + env(safe-area-inset-top));
+    @apply flex items-center gap-4 px-4;
+    @apply border-b border-glass-border/50 bg-glass-black/90 backdrop-blur-glass-lg;
+  }
+
+  .glass-search-input {
+    @apply flex-1 bg-transparent border-none text-text-primary;
+    @apply placeholder:text-text-muted focus:outline-none focus:ring-0;
+  }
+
+  /* ===== MEDIA PAGE LAYOUTS ===== */
 
   .media-page {
     @apply relative -mx-4 bg-cover bg-center px-4;
@@ -133,7 +401,7 @@
   }
 
   .media-poster {
-    @apply w-32 overflow-hidden rounded shadow md:w-44 md:rounded-lg md:shadow-2xl xl:mr-4 xl:w-52;
+    @apply w-32 overflow-hidden rounded-glass shadow-glass-lg md:w-44 xl:mr-4 xl:w-52;
   }
 
   .media-status {
@@ -141,35 +409,31 @@
   }
 
   .media-title {
-    @apply mt-4 flex flex-1 flex-col text-center text-white xl:mr-4 xl:mt-0 xl:text-left;
+    @apply mt-4 flex flex-1 flex-col text-center text-text-primary xl:mr-4 xl:mt-0 xl:text-left;
   }
 
   .media-title > h1 {
-    @apply text-2xl font-bold xl:text-4xl;
+    @apply text-display-md xl:text-display-lg;
   }
 
   h1 .media-year {
-    @apply text-2xl;
+    @apply text-display-sm text-text-secondary font-normal;
   }
 
   .media-attributes {
-    @apply mt-1 flex flex-wrap items-center justify-center space-x-1 text-xs text-gray-300 sm:text-sm xl:mt-0 xl:justify-start xl:text-base;
+    @apply mt-2 flex flex-wrap items-center justify-center gap-2 text-sm text-text-secondary xl:justify-start;
   }
 
   .media-attributes a {
-    @apply transition duration-300 hover:text-white hover:underline;
+    @apply transition-colors duration-200 hover:text-apple-blue;
   }
 
   .media-actions {
-    @apply relative mt-4 flex flex-shrink-0 flex-wrap items-center justify-center sm:flex-nowrap sm:justify-end xl:mt-0;
-  }
-
-  .media-actions > * {
-    @apply mb-3 sm:mb-0;
+    @apply relative mt-4 flex flex-shrink-0 flex-wrap items-center justify-center gap-3 sm:flex-nowrap sm:justify-end xl:mt-0;
   }
 
   .media-overview {
-    @apply flex flex-col pt-8 pb-4 text-white lg:flex-row;
+    @apply flex flex-col pt-8 pb-4 text-text-primary lg:flex-row;
   }
 
   .media-overview-left {
@@ -177,15 +441,15 @@
   }
 
   .tagline {
-    @apply mb-4 text-xl italic text-gray-400 lg:text-2xl;
+    @apply mb-4 text-lg italic text-text-secondary lg:text-xl;
   }
 
   .media-overview h2 {
-    @apply text-xl font-bold text-gray-300 sm:text-2xl;
+    @apply text-display-xs text-text-primary;
   }
 
   .media-overview p {
-    @apply pt-2 text-sm text-gray-400 sm:text-base;
+    @apply pt-2 text-text-secondary;
   }
 
   ul.media-crew {
@@ -193,13 +457,13 @@
   }
 
   ul.media-crew > li {
-    @apply col-span-1 flex flex-col font-bold text-gray-300;
+    @apply col-span-1 flex flex-col text-text-primary font-semibold;
   }
 
   a.crew-name,
   .media-fact-value a,
   .media-fact-value button {
-    @apply font-normal text-gray-400 transition duration-300 hover:text-gray-100 hover:underline;
+    @apply font-normal text-text-secondary transition-colors duration-200 hover:text-apple-blue;
   }
 
   .media-overview-right {
@@ -207,76 +471,48 @@
   }
 
   .media-facts {
-    @apply rounded-lg border border-gray-700 bg-gray-900 text-sm font-bold text-gray-300 shadow;
+    @apply glass-card p-0 overflow-hidden;
   }
 
   .media-fact {
-    @apply flex justify-between border-b border-gray-700 px-4 py-2 last:border-b-0;
+    @apply flex justify-between px-4 py-3 text-sm;
+    @apply border-b border-glass-border last:border-b-0;
   }
 
   .media-fact-value {
-    @apply ml-2 text-right text-sm font-normal text-gray-400;
+    @apply ml-2 text-right text-text-secondary;
   }
 
   .media-ratings {
-    @apply flex items-center justify-center space-x-5 border-b border-gray-700 px-4 py-2 font-medium last:border-b-0;
+    @apply flex items-center justify-center gap-6 px-4 py-3;
+    @apply border-b border-glass-border last:border-b-0;
   }
 
   .media-rating {
-    @apply flex items-center space-x-1;
+    @apply flex items-center gap-1.5;
   }
 
-  .error-message {
-    @apply relative top-0 bottom-0 left-0 right-0 flex h-screen flex-col items-center justify-center text-center text-gray-300;
-  }
-
-  .heading {
-    @apply text-2xl font-bold leading-8 text-gray-100;
-  }
-
-  .description {
-    @apply mt-1 max-w-4xl text-sm leading-5 text-gray-400;
-  }
-
-  img.avatar-sm {
-    @apply mr-1 h-5 w-5 scale-100 transform-gpu rounded-full transition duration-300 group-hover:scale-105;
-  }
-
-  .card-field {
-    @apply flex items-center truncate py-0.5 text-sm sm:py-1;
-  }
-
-  .card-field-name {
-    @apply mr-2 font-bold;
-  }
-
-  .card-field a {
-    @apply transition duration-300 hover:text-white hover:underline;
-  }
-
-  .section {
-    @apply mt-6 mb-10 text-white;
-  }
+  /* ===== FORM COMPONENTS ===== */
 
   .form-row {
     @apply mt-6 max-w-6xl sm:mt-5 sm:grid sm:grid-cols-3 sm:items-start sm:gap-4;
   }
 
   .form-input-area {
-    @apply text-sm text-white sm:col-span-2;
+    @apply text-sm text-text-primary sm:col-span-2;
   }
 
   .form-input-field {
-    @apply flex max-w-xl rounded-md shadow-sm;
+    @apply flex max-w-xl;
   }
 
   .actions {
-    @apply mt-8 border-t border-gray-700 pt-5 text-white;
+    @apply mt-8 border-t border-glass-border pt-5;
   }
 
   label,
   .group-label {
-    @apply mb-1 block text-sm font-bold leading-5 text-gray-400;
+    @apply mb-1 block text-sm font-semibold text-text-secondary;
   }
 
   label.checkbox-label {
@@ -288,33 +524,35 @@
   }
 
   label a {
-    @apply text-gray-100 transition duration-300 hover:text-white hover:underline;
+    @apply text-apple-blue transition-colors duration-200 hover:text-apple-blue-400;
   }
 
   .label-required {
-    @apply ml-1 text-red-500;
+    @apply ml-1 text-status-error;
   }
 
   .label-tip {
-    @apply block font-medium text-gray-500;
+    @apply block font-medium text-text-tertiary;
   }
 
   button,
   input,
   select,
   textarea {
-    @apply disabled:cursor-not-allowed;
+    @apply disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   input[type='checkbox'] {
-    @apply h-6 w-6 rounded-md text-indigo-600 transition duration-150 ease-in-out;
+    @apply glass-checkbox;
   }
 
   input[type='text'],
   input[type='password'],
+  input[type='email'],
+  input[type='number'],
   select,
   textarea {
-    @apply block w-full min-w-0 flex-1 rounded-md border border-gray-500 bg-gray-700 text-white transition duration-150 ease-in-out sm:text-sm sm:leading-5;
+    @apply glass-input;
   }
 
   input.rounded-l-only,
@@ -342,15 +580,7 @@
   }
 
   button.input-action {
-    @apply relative -ml-px inline-flex items-center border border-gray-500 bg-indigo-600 bg-opacity-80 px-3 py-2 text-sm font-medium leading-5 text-white last:rounded-r-md sm:px-3.5;
-  }
-
-  button.input-action[disabled] {
-    filter: grayscale(100%);
-  }
-
-  button.input-action:not([disabled]) {
-    @apply transition duration-150 ease-in-out hover:bg-opacity-100 active:bg-gray-100 active:text-gray-700;
+    @apply glass-button-primary relative -ml-px rounded-l-none;
   }
 
   .button-md :where(svg),
@@ -371,105 +601,151 @@
   }
 
   .protocol {
-    @apply inline-flex cursor-default items-center rounded-l-md border border-r-0 border-gray-500 bg-gray-600 px-3 text-gray-100 sm:text-sm;
+    @apply inline-flex cursor-default items-center rounded-l-glass-sm border border-r-0 border-glass-border bg-glass-200 px-3 text-text-secondary text-sm;
   }
 
   .error {
-    @apply mt-2 text-sm text-red-500;
+    @apply mt-2 text-sm text-status-error;
   }
 
   .form-group {
-    @apply mt-6 text-white;
+    @apply mt-6;
   }
+
+  /* ===== ERROR PAGE ===== */
+
+  .error-message {
+    @apply relative flex h-screen flex-col items-center justify-center text-center;
+  }
+
+  /* ===== HEADINGS ===== */
+
+  .heading {
+    @apply text-display-sm text-text-primary;
+  }
+
+  .description {
+    @apply mt-1 max-w-4xl text-sm text-text-secondary;
+  }
+
+  /* ===== AVATARS ===== */
+
+  img.avatar-sm {
+    @apply mr-1 h-5 w-5 rounded-full ring-2 ring-glass-border;
+    @apply transition-transform duration-200 group-hover:scale-105;
+  }
+
+  /* ===== CARD FIELDS ===== */
+
+  .card-field {
+    @apply flex items-center truncate py-0.5 text-sm sm:py-1;
+  }
+
+  .card-field-name {
+    @apply mr-2 font-semibold text-text-primary;
+  }
+
+  .card-field a {
+    @apply transition-colors duration-200 hover:text-apple-blue;
+  }
+
+  /* ===== SECTIONS ===== */
+
+  .section {
+    @apply mt-8 mb-12;
+  }
+
+  /* ===== TOAST NOTIFICATIONS ===== */
 
   .toast {
     width: 360px;
+    @apply glass-card-prominent !important;
   }
+
+  /* ===== REACT SELECT OVERRIDES ===== */
 
   .react-select-container {
     @apply w-full;
   }
 
   .react-select-container:has(+ .input-action) .react-select__control {
-    @apply rounded-r-none border border-gray-500 bg-gray-700 text-white hover:border-gray-500;
+    @apply rounded-r-none;
   }
 
   .react-select-container .react-select__control {
-    @apply rounded-md border border-gray-500 bg-gray-700 text-white hover:border-gray-500;
+    @apply rounded-glass-sm border border-glass-border bg-glass-200 text-text-primary;
+    @apply hover:border-glass-border-light;
   }
 
   .react-select-container-dark .react-select__control {
-    @apply border border-gray-700 bg-gray-800;
+    @apply border-glass-border bg-glass-100;
   }
 
   .react-select-container .react-select__control--is-focused {
-    @apply rounded-md border border-gray-500 bg-gray-700 text-white shadow;
+    @apply rounded-glass-sm border-apple-blue bg-glass-300 shadow-none ring-2 ring-apple-blue/20;
   }
 
   .react-select-container-dark .react-select__control--is-focused {
-    @apply border-gray-600 bg-gray-800;
+    @apply border-apple-blue bg-glass-200;
   }
 
   .react-select-container .react-select__menu {
-    @apply bg-gray-700 text-gray-300;
+    @apply rounded-glass-sm border border-glass-border bg-glass-400/95 backdrop-blur-glass text-text-primary;
   }
 
   .react-select-container-dark .react-select__menu {
-    @apply bg-gray-800;
+    @apply bg-glass-300/95;
   }
 
   .react-select-container .react-select__option--is-focused {
-    @apply bg-gray-600 text-white;
+    @apply bg-glass-500 text-text-primary;
   }
 
   .react-select-container-dark .react-select__option--is-focused {
-    @apply bg-gray-700;
+    @apply bg-glass-400;
   }
 
   .react-select-container .react-select__indicator-separator {
-    @apply bg-gray-500;
+    @apply bg-glass-border;
   }
 
   .react-select-container .react-select__indicator {
-    @apply text-gray-500;
+    @apply text-text-tertiary;
   }
 
   .react-select-container .react-select__placeholder {
-    @apply text-gray-400;
+    @apply text-text-muted;
   }
 
   .react-select-container .react-select__multi-value {
-    @apply rounded-md border border-gray-500 bg-gray-800;
+    @apply rounded-glass-sm border border-glass-border bg-glass-300;
   }
 
   .react-select-container .react-select__multi-value__label {
-    @apply text-white;
+    @apply text-text-primary;
   }
 
   .react-select-container .react-select__multi-value__remove {
-    @apply cursor-pointer rounded-r-md hover:bg-red-700 hover:text-red-100;
+    @apply cursor-pointer rounded-r-glass-sm hover:bg-status-error/20 hover:text-status-error;
   }
 
   .react-select-container .react-select__input {
-    @apply border-none text-base shadow-sm ring-0;
+    @apply border-none text-base shadow-none ring-0;
   }
 
   .react-select-container .react-select__input input:focus {
-    @apply border-none;
-    box-shadow: none;
+    @apply border-none shadow-none ring-0;
   }
 
   .react-select-container .react-select__input-container {
-    @apply text-white;
+    @apply text-text-primary;
   }
 
   .react-select-container .react-select__single-value {
-    @apply text-sm text-gray-100;
+    @apply text-sm text-text-primary;
   }
 
-  .react-select-container .react-select__placeholder {
-    @apply text-sm text-gray-500;
-  }
+  /* ===== DATEPICKER OVERRIDES ===== */
 
   .datepicker-wrapper > button {
     @apply top-0;
@@ -491,8 +767,10 @@
     @apply hidden;
   }
 
+  /* ===== RANGE SLIDER ===== */
+
   input[type='range']::-webkit-slider-thumb {
-    @apply rounded-full border-0 bg-indigo-500;
+    @apply rounded-full border-0 bg-apple-blue;
     pointer-events: all;
     width: 16px;
     height: 16px;
@@ -500,11 +778,82 @@
   }
 
   input[type='range']::-moz-range-thumb {
-    @apply rounded-full border-0 bg-indigo-500;
+    @apply rounded-full border-0 bg-apple-blue;
     pointer-events: all;
     width: 16px;
     height: 16px;
     -webkit-appearance: none;
+  }
+
+  /* ===== CARD GRIDS ===== */
+
+  ul.cards-vertical,
+  ul.cards-horizontal {
+    @apply grid gap-4;
+  }
+
+  ul.cards-vertical {
+    grid-template-columns: repeat(auto-fill, minmax(9.375rem, 1fr));
+  }
+
+  ul.cards-horizontal {
+    grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr));
+  }
+
+  .provider-icons {
+    grid-template-columns: repeat(auto-fill, minmax(3.5rem, 1fr));
+  }
+
+  /* ===== SLIDER HEADER (legacy) ===== */
+
+  .slider-header {
+    @apply glass-slider-header;
+  }
+
+  .slider-title {
+    @apply glass-slider-title;
+  }
+
+  a.slider-title {
+    @apply transition-colors duration-200 hover:text-apple-blue;
+  }
+
+  a.slider-title svg {
+    @apply ml-2 h-6 w-6;
+  }
+
+  /* ===== SIDEBAR (legacy) ===== */
+
+  .searchbar {
+    padding-top: env(safe-area-inset-top);
+    height: calc(4rem + env(safe-area-inset-top));
+  }
+
+  .sidebar {
+    @apply glass-sidebar;
+  }
+
+  .slideover {
+    padding-top: calc(0.75rem + env(safe-area-inset-top)) !important;
+    padding-bottom: calc(0.75rem + env(safe-area-inset-top)) !important;
+  }
+
+  .sidebar-close-button {
+    top: env(safe-area-inset-top);
+  }
+
+  /* ===== SERVER TYPE BUTTON ===== */
+
+  .server-type-button {
+    @apply glass-button;
+  }
+
+  .jellyfin-server svg {
+    @apply h-6 w-6;
+  }
+
+  .emby-server svg {
+    @apply h-7 w-7;
   }
 }
 
@@ -529,7 +878,6 @@
     min-height: calc(100vh + env(safe-area-inset-top));
   }
 
-  /* Used for animating height */
   .extra-max-height {
     max-height: 100rem;
   }
@@ -541,12 +889,23 @@
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .hide-scrollbar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
+  /* Seerr brand gradient text */
+  .text-seerr {
+    @apply bg-gradient-to-br from-apple-blue to-status-info bg-clip-text text-transparent;
+  }
+
+  /* Legacy overseerr gradient */
   .text-overseerr {
-    @apply bg-gradient-to-br from-indigo-400 to-purple-400 bg-clip-text text-transparent;
+    @apply text-seerr;
+  }
+
+  /* Glass text gradient */
+  .text-glass-gradient {
+    @apply bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent;
   }
 
   @media all and (display-mode: browser) {
@@ -558,7 +917,47 @@
   .extra-bottom-space {
     height: calc(4rem + env(safe-area-inset-bottom));
   }
+
+  /* Glassmorphism utilities */
+  .glass-surface {
+    @apply bg-glass-200 backdrop-blur-glass border border-glass-border;
+  }
+
+  .glass-surface-raised {
+    @apply bg-glass-300 backdrop-blur-glass-lg border border-glass-border-light shadow-glass;
+  }
+
+  .glass-gradient-overlay {
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.8) 100%
+    );
+  }
+
+  .glass-gradient-radial {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(10, 132, 255, 0.15) 0%,
+      transparent 70%
+    );
+  }
+
+  /* Shimmer loading effect */
+  .glass-shimmer {
+    @apply relative overflow-hidden;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.03) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
 }
+
+/* ===== PTR (Pull to Refresh) Overrides ===== */
 
 .ptr--ptr {
   box-shadow: initial !important;
