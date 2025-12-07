@@ -63,11 +63,18 @@ const Layout = ({ children }: LayoutProps) => {
   }, []);
 
   return (
-    <div className="flex h-full min-h-full min-w-0 bg-gray-900">
-      <div className="pwa-only fixed inset-0 z-20 h-1 w-full border-gray-700 md:border-t" />
-      <div className="absolute top-0 h-64 w-full bg-gradient-to-bl from-gray-800 to-gray-900">
-        <div className="relative inset-0 h-full w-full bg-gradient-to-t from-gray-900 to-transparent" />
+    <div className="flex h-full min-h-full min-w-0 bg-glass-black">
+      {/* PWA top border */}
+      <div className="pwa-only fixed inset-0 z-20 h-1 w-full border-glass-border md:border-t" />
+
+      {/* Background gradient */}
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Subtle radial gradient for depth */}
+        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-apple-blue/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-1/4 right-0 w-[400px] h-[400px] bg-apple-blue/3 rounded-full blur-[120px]" />
       </div>
+
+      {/* Sidebar */}
       <Sidebar
         open={isSidebarOpen}
         setClosed={() => setSidebarOpen(false)}
@@ -76,6 +83,8 @@ const Layout = ({ children }: LayoutProps) => {
         revalidateIssueCount={() => revalidateIssueCount()}
         revalidateRequestsCount={() => revalidateRequestsCount()}
       />
+
+      {/* Mobile Menu */}
       <div className="sm:hidden">
         <MobileMenu
           pendingRequestsCount={requestResponse?.pending ?? 0}
@@ -85,43 +94,56 @@ const Layout = ({ children }: LayoutProps) => {
         />
       </div>
 
+      {/* Main content area */}
       <div className="relative mb-16 flex w-0 min-w-0 flex-1 flex-col lg:ml-64">
         <PullToRefresh />
+
+        {/* Top navigation bar */}
         <div
-          className={`searchbar fixed left-0 right-0 top-0 z-10 flex flex-shrink-0 bg-opacity-80 transition duration-300 ${
-            isScrolled ? 'bg-gray-700' : 'bg-transparent'
-          } lg:left-64`}
+          className={`searchbar fixed left-0 right-0 top-0 z-10 flex flex-shrink-0 transition-all duration-300 lg:left-64 ${
+            isScrolled
+              ? 'bg-glass-200/80 border-b border-glass-border shadow-glass-sm'
+              : 'bg-transparent border-b border-transparent'
+          }`}
           style={{
-            backdropFilter: isScrolled ? 'blur(5px)' : undefined,
-            WebkitBackdropFilter: isScrolled ? 'blur(5px)' : undefined,
+            backdropFilter: isScrolled ? 'blur(20px)' : undefined,
+            WebkitBackdropFilter: isScrolled ? 'blur(20px)' : undefined,
           }}
         >
           <div className="flex flex-1 items-center justify-between px-4 md:pr-4 md:pl-4">
+            {/* Sidebar toggle button (tablet) */}
             <button
-              className={`mr-2 hidden text-white sm:block ${
-                isScrolled ? 'opacity-90' : 'opacity-70'
-              } transition duration-300 focus:outline-none lg:hidden`}
+              className={`mr-2 hidden text-text-primary sm:block transition-all duration-300 focus:outline-none lg:hidden ${
+                isScrolled ? 'opacity-100' : 'opacity-70 hover:opacity-100'
+              }`}
               aria-label="Open sidebar"
               onClick={() => setSidebarOpen(true)}
               data-testid="sidebar-toggle"
             >
               <Bars3BottomLeftIcon className="h-7 w-7" />
             </button>
+
+            {/* Back button (PWA only) */}
             <button
-              className={`mr-2 text-white ${
-                isScrolled ? 'opacity-90' : 'opacity-70'
-              } pwa-only transition duration-300 hover:text-white focus:text-white focus:outline-none`}
+              className={`mr-2 text-text-primary pwa-only transition-all duration-300 hover:text-white focus:text-white focus:outline-none ${
+                isScrolled ? 'opacity-100' : 'opacity-70'
+              }`}
               onClick={() => router.back()}
             >
               <ArrowLeftIcon className="w-7" />
             </button>
+
+            {/* Search input */}
             <SearchInput />
+
+            {/* User dropdown */}
             <div className="flex items-center">
               <UserDropdown />
             </div>
           </div>
         </div>
 
+        {/* Main content */}
         <main className="relative top-16 z-0 focus:outline-none" tabIndex={0}>
           <div className="mb-6">
             <div className="max-w-8xl mx-auto px-4">{children}</div>

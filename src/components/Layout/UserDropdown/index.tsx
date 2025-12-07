@@ -50,12 +50,12 @@ const UserDropdown = () => {
     <Menu as="div" className="relative ml-3">
       <div>
         <Menu.Button
-          className="flex max-w-xs items-center rounded-full text-sm ring-1 ring-gray-700 hover:ring-gray-500 focus:outline-none focus:ring-gray-500"
+          className="flex max-w-xs items-center rounded-glass-full text-sm ring-2 ring-glass-border transition-all duration-200 hover:ring-glass-border-light focus:outline-none focus:ring-apple-blue/50"
           data-testid="user-menu"
         >
           <CachedImage
             type="avatar"
-            className="h-8 w-8 rounded-full object-cover sm:h-10 sm:w-10"
+            className="h-8 w-8 rounded-glass-full object-cover sm:h-10 sm:w-10"
             src={user ? user.avatar : ''}
             alt=""
             width={40}
@@ -65,32 +65,33 @@ const UserDropdown = () => {
       </div>
       <Transition
         as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="opacity-0 scale-95"
-        enterTo="opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="opacity-100 scale-100"
-        leaveTo="opacity-0 scale-95"
+        enter="transition ease-glass duration-200"
+        enterFrom="opacity-0 scale-95 translate-y-1"
+        enterTo="opacity-100 scale-100 translate-y-0"
+        leave="transition ease-glass duration-150"
+        leaveFrom="opacity-100 scale-100 translate-y-0"
+        leaveTo="opacity-0 scale-95 translate-y-1"
         appear
       >
-        <Menu.Items className="absolute right-0 mt-2 w-72 origin-top-right rounded-md shadow-lg">
-          <div className="divide-y divide-gray-700 rounded-md bg-gray-800 bg-opacity-80 ring-1 ring-gray-700 backdrop-blur">
+        <Menu.Items className="absolute right-0 mt-2 w-72 origin-top-right rounded-glass shadow-glass-lg focus:outline-none">
+          <div className="divide-y divide-glass-border rounded-glass border border-glass-border bg-glass-200/95 backdrop-blur-glass">
+            {/* User info section */}
             <div className="flex flex-col space-y-4 px-4 py-4">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <CachedImage
                   type="avatar"
-                  className="h-8 w-8 rounded-full object-cover sm:h-10 sm:w-10"
+                  className="h-10 w-10 rounded-glass-full object-cover ring-2 ring-glass-border"
                   src={user ? user.avatar : ''}
                   alt=""
                   width={40}
                   height={40}
                 />
                 <div className="flex min-w-0 flex-col">
-                  <span className="truncate text-xl font-semibold text-gray-200">
+                  <span className="truncate text-lg font-semibold text-text-primary">
                     {user?.displayName}
                   </span>
                   {user?.displayName?.toLowerCase() !== user?.email && (
-                    <span className="truncate text-sm text-gray-400">
+                    <span className="truncate text-sm text-text-tertiary">
                       {user?.email}
                     </span>
                   )}
@@ -98,19 +99,21 @@ const UserDropdown = () => {
               </div>
               {user && <MiniQuotaDisplay userId={user?.id} />}
             </div>
-            <div className="p-1">
+
+            {/* Menu items */}
+            <div className="p-1.5">
               <Menu.Item>
                 {({ active }) => (
                   <ForwardedLink
                     href={`/profile`}
-                    className={`flex items-center rounded px-4 py-2 text-sm font-medium text-gray-200 transition duration-150 ease-in-out ${
+                    className={`flex items-center rounded-glass-sm px-4 py-2.5 text-sm font-medium transition-all duration-150 ${
                       active
-                        ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white'
-                        : ''
+                        ? 'bg-apple-blue text-white'
+                        : 'text-text-secondary hover:text-text-primary'
                     }`}
                     data-testid="user-menu-profile"
                   >
-                    <UserIcon className="mr-2 inline h-5 w-5" />
+                    <UserIcon className="mr-3 inline h-5 w-5" />
                     <span>{intl.formatMessage(messages.myprofile)}</span>
                   </ForwardedLink>
                 )}
@@ -126,14 +129,14 @@ const UserDropdown = () => {
                         ? `/users/${user?.id}/requests?filter=all`
                         : '/requests'
                     }
-                    className={`flex items-center rounded px-4 py-2 text-sm font-medium text-gray-200 transition duration-150 ease-in-out ${
+                    className={`flex items-center rounded-glass-sm px-4 py-2.5 text-sm font-medium transition-all duration-150 ${
                       active
-                        ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white'
-                        : ''
+                        ? 'bg-apple-blue text-white'
+                        : 'text-text-secondary hover:text-text-primary'
                     }`}
-                    data-testid="user-menu-settings"
+                    data-testid="user-menu-requests"
                   >
-                    <ClockIcon className="mr-2 inline h-5 w-5" />
+                    <ClockIcon className="mr-3 inline h-5 w-5" />
                     <span>{intl.formatMessage(messages.requests)}</span>
                   </ForwardedLink>
                 )}
@@ -142,30 +145,34 @@ const UserDropdown = () => {
                 {({ active }) => (
                   <ForwardedLink
                     href={`/profile/settings`}
-                    className={`flex items-center rounded px-4 py-2 text-sm font-medium text-gray-200 transition duration-150 ease-in-out ${
+                    className={`flex items-center rounded-glass-sm px-4 py-2.5 text-sm font-medium transition-all duration-150 ${
                       active
-                        ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white'
-                        : ''
+                        ? 'bg-apple-blue text-white'
+                        : 'text-text-secondary hover:text-text-primary'
                     }`}
                     data-testid="user-menu-settings"
                   >
-                    <CogIcon className="mr-2 inline h-5 w-5" />
+                    <CogIcon className="mr-3 inline h-5 w-5" />
                     <span>{intl.formatMessage(messages.settings)}</span>
                   </ForwardedLink>
                 )}
               </Menu.Item>
+
+              {/* Divider */}
+              <div className="my-1.5 border-t border-glass-border" />
+
               <Menu.Item>
                 {({ active }) => (
                   <a
                     href="#"
-                    className={`flex items-center rounded px-4 py-2 text-sm font-medium text-gray-200 transition duration-150 ease-in-out ${
+                    className={`flex items-center rounded-glass-sm px-4 py-2.5 text-sm font-medium transition-all duration-150 ${
                       active
-                        ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white'
-                        : ''
+                        ? 'bg-status-error/20 text-status-error'
+                        : 'text-text-secondary hover:text-text-primary'
                     }`}
                     onClick={() => logout()}
                   >
-                    <ArrowRightOnRectangleIcon className="mr-2 inline h-5 w-5" />
+                    <ArrowRightOnRectangleIcon className="mr-3 inline h-5 w-5" />
                     <span>{intl.formatMessage(messages.signout)}</span>
                   </a>
                 )}
