@@ -1,8 +1,8 @@
-import Button from '@app/components/Common/Button';
+import { GlassButton, GlassInput } from '@app/components/GlassUI';
 import SensitiveInput from '@app/components/Common/SensitiveInput';
 import useSettings from '@app/hooks/useSettings';
 import defineMessages from '@app/utils/defineMessages';
-import { ArrowLeftOnRectangleIcon } from '@heroicons/react/24/outline';
+import { ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline';
 import axios from 'axios';
 import { Field, Form, Formik } from 'formik';
 import Link from 'next/link';
@@ -55,6 +55,7 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
       validateOnBlur={false}
       onSubmit={async (values) => {
         try {
+          setLoginError(null);
           await axios.post('/api/v1/auth/local', {
             email: values.email,
             password: values.password,
@@ -68,92 +69,96 @@ const LocalLogin = ({ revalidate }: LocalLoginProps) => {
     >
       {({ errors, touched, isSubmitting, isValid }) => {
         return (
-          <>
-            <Form data-form-type="login">
-              <div>
-                <h2 className="mb-6 -mt-1 text-center text-lg font-bold text-neutral-200">
-                  {intl.formatMessage(messages.loginwithapp, {
-                    appName: settings.currentSettings.applicationTitle,
-                  })}
-                </h2>
+          <Form data-form-type="login">
+            {/* Header */}
+            <h2 className="mb-6 text-center text-xl font-semibold text-text-primary">
+              {intl.formatMessage(messages.loginwithapp, {
+                appName: settings.currentSettings.applicationTitle,
+              })}
+            </h2>
 
-                <div className="mt-1 mb-4">
-                  <div className="form-input-field">
-                    <Field
-                      id="email"
-                      name="email"
-                      placeholder={`${intl.formatMessage(
-                        messages.email
-                      )} / ${intl.formatMessage(messages.username)}`}
-                      type="text"
-                      inputMode="email"
-                      data-testid="email"
-                      data-form-type="username,email"
-                      className="!bg-gray-700/80 placeholder:text-gray-400"
-                    />
-                  </div>
-                  {errors.email &&
-                    touched.email &&
-                    typeof errors.email === 'string' && (
-                      <div className="error">{errors.email}</div>
-                    )}
-                </div>
-                <div className="mt-1 mb-2">
-                  <div className="form-input-field">
-                    <SensitiveInput
-                      as="field"
-                      id="password"
-                      name="password"
-                      type="password"
-                      placeholder={intl.formatMessage(messages.password)}
-                      autoComplete="current-password"
-                      data-testid="password"
-                      data-form-type="password"
-                      className="!bg-gray-700/80 placeholder:text-gray-400"
-                      data-1pignore="false"
-                      data-lpignore="false"
-                    />
-                  </div>
-                  <div className="flex">
-                    {errors.password &&
-                      touched.password &&
-                      typeof errors.password === 'string' && (
-                        <div className="error">{errors.password}</div>
-                      )}
-                    <div className="flex-grow"></div>
-                    {passwordResetEnabled && (
-                      <Link
-                        href="/resetpassword"
-                        className="pt-2 text-sm text-indigo-500 hover:text-indigo-400"
-                      >
-                        {intl.formatMessage(messages.forgotpassword)}
-                      </Link>
-                    )}
-                  </div>
-                </div>
-                {loginError && (
-                  <div className="mt-1 mb-2 sm:col-span-2 sm:mt-0">
-                    <div className="error">{loginError}</div>
-                  </div>
+            {/* Email/Username Field */}
+            <div className="mb-4">
+              <Field
+                as={GlassInput}
+                id="email"
+                name="email"
+                placeholder={`${intl.formatMessage(
+                  messages.email
+                )} / ${intl.formatMessage(messages.username)}`}
+                type="text"
+                inputMode="email"
+                data-testid="email"
+                data-form-type="username,email"
+                error={
+                  errors.email && touched.email && typeof errors.email === 'string'
+                    ? errors.email
+                    : undefined
+                }
+                autoComplete="username"
+              />
+            </div>
+
+            {/* Password Field */}
+            <div className="mb-2">
+              <div className="relative">
+                <SensitiveInput
+                  as="field"
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder={intl.formatMessage(messages.password)}
+                  autoComplete="current-password"
+                  data-testid="password"
+                  data-form-type="password"
+                  className="glass-input w-full pr-10"
+                  data-1pignore="false"
+                  data-lpignore="false"
+                />
+              </div>
+              <div className="mt-2 flex items-center justify-between">
+                {errors.password &&
+                touched.password &&
+                typeof errors.password === 'string' ? (
+                  <span className="text-xs text-status-error">
+                    {errors.password}
+                  </span>
+                ) : (
+                  <span />
+                )}
+                {passwordResetEnabled && (
+                  <Link
+                    href="/resetpassword"
+                    className="text-sm text-apple-blue transition-colors hover:text-apple-blue-400"
+                  >
+                    {intl.formatMessage(messages.forgotpassword)}
+                  </Link>
                 )}
               </div>
+            </div>
 
-              <Button
-                buttonType="primary"
-                type="submit"
-                disabled={isSubmitting || !isValid}
-                data-testid="local-signin-button"
-                className="mt-2 w-full shadow-sm"
-              >
-                <ArrowLeftOnRectangleIcon />
-                <span>
-                  {isSubmitting
-                    ? intl.formatMessage(messages.signingin)
-                    : intl.formatMessage(messages.signin)}
-                </span>
-              </Button>
-            </Form>
-          </>
+            {/* Login Error */}
+            {loginError && (
+              <div className="mb-4 rounded-glass-sm border border-status-error/30 bg-status-error/10 px-3 py-2">
+                <span className="text-sm text-status-error">{loginError}</span>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <GlassButton
+              variant="primary"
+              type="submit"
+              disabled={isSubmitting || !isValid}
+              isLoading={isSubmitting}
+              data-testid="local-signin-button"
+              className="mt-4 w-full"
+              rightIcon={!isSubmitting && <ArrowRightOnRectangleIcon className="h-5 w-5" />}
+            >
+              {isSubmitting
+                ? intl.formatMessage(messages.signingin)
+                : intl.formatMessage(messages.signin)}
+            </GlassButton>
+          </Form>
         );
       }}
     </Formik>

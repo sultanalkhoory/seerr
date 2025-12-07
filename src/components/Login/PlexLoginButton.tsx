@@ -1,6 +1,5 @@
 import PlexIcon from '@app/assets/services/plex.svg';
-import Button from '@app/components/Common/Button';
-import { SmallLoadingSpinner } from '@app/components/Common/LoadingSpinner';
+import { GlassButton, GlassSpinner } from '@app/components/GlassUI';
 import usePlexLogin from '@app/hooks/usePlexLogin';
 import defineMessages from '@app/utils/defineMessages';
 import { FormattedMessage } from 'react-intl';
@@ -25,15 +24,15 @@ const PlexLoginButton = ({
   const { loading, login } = usePlexLogin({ onAuthToken, onError });
 
   return (
-    <Button
-      className="relative flex-1 border-[#cc7b19] bg-[rgba(204,123,25,0.3)] hover:border-[#cc7b19] hover:bg-[rgba(204,123,25,0.7)] disabled:opacity-50"
+    <GlassButton
+      className="relative flex-1 border-[#e5a00d]/50 bg-[#e5a00d]/20 text-[#e5a00d] hover:bg-[#e5a00d]/30 hover:border-[#e5a00d]/70"
       onClick={login}
       disabled={loading || isProcessing}
       data-testid="plex-login-button"
     >
       {loading && (
-        <div className="absolute right-0 mr-4 h-4 w-4">
-          <SmallLoadingSpinner />
+        <div className="absolute right-3">
+          <GlassSpinner size="sm" className="text-[#e5a00d]" />
         </div>
       )}
 
@@ -41,21 +40,21 @@ const PlexLoginButton = ({
         <FormattedMessage
           {...messages.loginwithapp}
           values={{
-            appName: <PlexIcon className="mt-[2px] ml-[0.35em] w-8" />,
+            appName: <PlexIcon className="mt-[2px] ml-2 w-8" />,
           }}
         >
           {(chunks) => (
-            <>
-              {chunks.map((c) =>
-                typeof c === 'string' ? <span>{c}</span> : c
+            <span className="flex items-center">
+              {chunks.map((c, i) =>
+                typeof c === 'string' ? <span key={i}>{c}</span> : c
               )}
-            </>
+            </span>
           )}
         </FormattedMessage>
       ) : (
         <PlexIcon className="w-8" />
       )}
-    </Button>
+    </GlassButton>
   );
 };
 

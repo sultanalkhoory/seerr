@@ -17,14 +17,14 @@ const SearchInput = () => {
         <label htmlFor="search_field" className="sr-only">
           Search
         </label>
-        <div className="relative flex w-full items-center text-white focus-within:text-gray-200">
+        <div className="relative flex w-full items-center text-text-primary focus-within:text-text-primary">
           <div className="pointer-events-none absolute inset-y-0 left-4 flex items-center">
-            <MagnifyingGlassIcon className="h-5 w-5" />
+            <MagnifyingGlassIcon className="h-5 w-5 text-text-tertiary" />
           </div>
           <input
             id="search_field"
-            style={{ paddingRight: searchValue.length > 0 ? '1.75rem' : '' }}
-            className="block w-full rounded-full border border-gray-600 bg-gray-900 bg-opacity-80 py-2 pl-10 text-white placeholder-gray-300 hover:border-gray-500 focus:border-gray-500 focus:bg-opacity-100 focus:placeholder-gray-400 focus:outline-none focus:ring-0 sm:text-base"
+            style={{ paddingRight: searchValue.length > 0 ? '2.5rem' : '' }}
+            className="block w-full rounded-glass-full border border-glass-border bg-glass-200/80 py-2.5 pl-11 text-text-primary placeholder-text-muted backdrop-blur-glass-sm transition-all duration-200 hover:border-glass-border-light hover:bg-glass-300/80 focus:border-apple-blue/50 focus:bg-glass-300 focus:placeholder-text-tertiary focus:outline-none focus:ring-2 focus:ring-apple-blue/20 sm:text-base"
             placeholder={intl.formatMessage(messages.searchPlaceholder)}
             type="search"
             autoComplete="off"
@@ -45,7 +45,7 @@ const SearchInput = () => {
           />
           {searchValue.length > 0 && (
             <button
-              className="absolute inset-y-0 right-2 m-auto h-7 w-7 border-none p-1 text-gray-400 outline-none transition hover:text-white focus:border-none focus:outline-none"
+              className="absolute inset-y-0 right-3 m-auto flex h-7 w-7 items-center justify-center rounded-glass-full border-none p-1 text-text-muted outline-none transition-all duration-200 hover:bg-glass-300 hover:text-text-primary focus:border-none focus:outline-none"
               onClick={() => clear()}
             >
               <XCircleIcon className="h-5 w-5" />
